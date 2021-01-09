@@ -1,30 +1,23 @@
 import React, { Component } from "react";
 import { Container,Row,Col,Input} from "reactstrap";
 import { Link } from "react-router-dom";
-import { Redirect } from "react-router";
 import Validation from "./Validation"; 
 import { connect } from 'react-redux';
 import {loginActions}  from "./actions";
 import jwt from "jsonwebtoken";
 
 
-class Login extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
-    if(props.loginDetails.token){
-      this.props.history.push(`/post`);
-    }
     this.state = {
-      login_status: false,
       email: {
         value: "",
         valid: false,
       },
       password: "",
       error: "",
-      loading: false,
-      loginto: "",
-      forgotPassword: false,
+      success: "",
     };
 
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -62,7 +55,7 @@ class Login extends Component {
     }
   }
 
-  login(e) {
+  signup(e) {
       if(!this.state.email.value){
         this.setState({
           error: "Email Field can't be left blank",
@@ -83,7 +76,6 @@ class Login extends Component {
         return null;
       }
       if (this.state.email.value && this.state.email.valid && this.state.password) {
-        if(this.state.email.value === this.props.loginDetails.username && this.state.password === this.props.loginDetails.password){
           let token = jwt.sign(
             {
                 email: this.state.email,
@@ -92,11 +84,8 @@ class Login extends Component {
             },
             "yogendra@7750"
         );
-          this.props.login({token:token});
-        }else{
-          this.setState({error:'Incorrect email/password'})
-           return null;
-        }
+          this.props.signup({username:this.state.email.value,password:this.state.password,token:token});
+          this.setState({success:'User Created Successfully. Please Login'});
       }
   }
 
@@ -107,56 +96,41 @@ class Login extends Component {
   }
 
   render() {
-    if (this.props.loginDetails.token) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/post',
-          }}
-        />
-      );
-    } else {
-      return (
-        <div>
-          
-          <Container className="login-body">
-            <Row>
-              <Col className="loginpanel">              
-                <Row className="panel_top">LOGIN</Row>  
-                <Input
-                  className="email_txt"
-                  placeholder="Email"
-                  value={this.state.email.value}
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <Input
-                  type="password"
-                  className="password_txt"
-                  placeholder="Password"
-                  value={this.state.password}
-                  onKeyPress={(e) => this.handleKeyPress(e)}
-                  onChange={(e) => this.handleChange(e)}
-                />
-                <div className="login_error">{this.state.error}</div>
-                <button className="login_btn" onClick={(e) => {this.login(e)}}>LOGIN</button> 
-                  <div className="forgot_btn"                      
-                  >
-                    Forgot Password
-                  </div>
-                  <div className="signupdiv mt-3">
-                    <span>Don't have an account? </span>
-                    <span><Link to="/signup" className="signuplink"
-                    >
-                      Signup
-                    </Link></span>
-                  </div>
-                
-              </Col>
-            </Row>
-          </Container>
-        </div>
-      );
-    }
+    return (
+    <div>
+        <Container className="login-body">
+        <Row>
+            <Col className="loginpanel">              
+            <Row className="panel_top">SIGNUP</Row>  
+            <Input
+                className="email_txt"
+                placeholder="Email"
+                value={this.state.email.value}
+                onChange={(e) => this.handleChange(e)}
+            />
+            <Input
+                type="password"
+                className="password_txt"
+                placeholder="Password"
+                value={this.state.password}
+                onKeyPress={(e) => this.handleKeyPress(e)}
+                onChange={(e) => this.handleChange(e)}
+            />
+            <div className="login_error">{this.state.error}</div>
+            <div className="login_error">{this.state.success}</div>
+            <button className="login_btn" onClick={(e) => {this.signup(e)}}>SIGNUP</button> 
+                <div className="signupdiv mt-3">
+                <span><Link to="/" className="signuplink"
+                >
+                    Login
+                </Link></span>
+                </div>
+            
+            </Col>
+        </Row>
+        </Container>
+    </div>
+    );
   }
 }
 
@@ -166,8 +140,8 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  login: loginActions.login
+  signup: loginActions.signup
 };
 
-Login = connect(mapState, actionCreators)(Login);
-export default Login;
+SignUp = connect(mapState, actionCreators)(SignUp);
+export default SignUp;

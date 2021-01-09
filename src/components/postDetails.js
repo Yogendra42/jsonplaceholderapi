@@ -8,6 +8,7 @@ const PostDetail = ({post, postDetail}) => {
         <Col xs="6"  className="right">
             <Card className="custom-card">
                 <CardBody>
+                    <CardTitle tag="h5"><strong>Post </strong></CardTitle>
                     <CardTitle tag="h5">{post.title}</CardTitle>
                     <CardText>{post.body}</CardText>
                 </CardBody>

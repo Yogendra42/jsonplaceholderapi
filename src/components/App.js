@@ -1,6 +1,7 @@
 import React from "react";
 import '../css/App.css';
 import Login from "./login";
+import Signup from "./signup";
 import Post from "./post";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { withCookies, CookiesProvider } from "react-cookie";
@@ -16,6 +17,11 @@ function App() {
                 exact
                 path="/"
                 component={Login}
+              />
+              <Route
+                exact
+                path="/signup"
+                component={Signup}
               />
               <Route
                 exact
